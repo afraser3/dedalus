@@ -88,7 +88,9 @@ class GlobalFlowProperty:
 
         self.solver = solver
         self.cadence = cadence
-        self.reducer = GlobalArrayReducer(solver.domain.dist.comm_cart)
+        # self.reducer = GlobalArrayReducer(solver.domain.dist.comm_cart)
+        # The following change leads to an error if GlobalFlowProperty.max() is called for an np.complex128 grid type
+        self.reducer = GlobalArrayReducer(solver.domain.dist.comm_cart, dtype=solver.domain.grid_dtype)
         self.properties = solver.evaluator.add_dictionary_handler(iter=cadence)
 
     def add_property(self, property, name, precompute_integral=False):
